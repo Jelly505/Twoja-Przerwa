@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101116">
+<title>Twoja przerwa</title>
+<style>
+:root{color-scheme:dark;--bg:#101116;--panel:#1b1d24;--line:#30333d;--text:#f5f6f8;--muted:#a5a9b4;--accent:#c1f27a;--ink:#1c2610}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#292e37 0%,var(--bg) 55%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input{font:inherit}button{cursor:pointer}.shell{width:min(1080px,100%);margin:auto;padding:clamp(20px,4vw,48px)}
+header{display:flex;align-items:center;gap:14px;margin-bottom:24px}.logo{width:52px;height:52px;display:grid;place-items:center;border-radius:17px;background:var(--accent);color:var(--ink);font-size:27px;font-weight:900}.kicker{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}h1{margin:3px 0 0;font-size:clamp(26px,4vw,36px);letter-spacing:-.05em}.subtitle{margin:0 0 26px;color:var(--muted);line-height:1.55;max-width:680px}
+.layout{display:grid;grid-template-columns:1fr 1.05fr;gap:18px;align-items:stretch}.panel{border:1px solid var(--line);border-radius:22px;background:rgba(27,29,36,.94);padding:clamp(18px,3vw,26px);box-shadow:0 18px 48px #0002}.panel h2{font-size:16px;margin:0 0 20px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{min-width:0}.wide{grid-column:1/-1}label{display:block;color:var(--muted);font-size:13px;margin-bottom:8px}input{width:100%;min-width:0;padding:13px 12px;border:1px solid #3a3d48;border-radius:12px;background:#14161b;color:var(--text);outline:none;font-size:17px;font-weight:650;font-variant-numeric:tabular-nums}input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #c1f27a20}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}button{border:0;border-radius:12px;padding:13px 12px;font-size:14px;font-weight:750}.primary{background:var(--accent);color:var(--ink)}.secondary{background:#30333c;color:var(--text)}.full{width:100%;margin-top:10px}
+.output{display:flex;flex-direction:column;justify-content:space-between;background:var(--accent);color:var(--ink);border:0}.eyebrow{font-size:12px;letter-spacing:.13em;font-weight:800;color:#455532;text-transform:uppercase}.big-time{font-size:clamp(43px,8vw,76px);font-weight:900;letter-spacing:-.075em;line-height:1.08;margin:14px 0 10px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.note{color:#455532;font-size:14px;line-height:1.5}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px}.stat{padding:15px;border:1px solid #26351625;border-radius:14px;background:#ffffff40}.stat strong{display:block;font-size:clamp(22px,3vw,30px);letter-spacing:-.045em;font-variant-numeric:tabular-nums}.stat span{display:block;font-size:12px;color:#455532;margin-top:5px}.timer{margin-top:20px;padding-top:18px;border-top:1px solid #26351630}.timer-head{display:flex;justify-content:space-between;gap:12px}.timer-head span{font-size:13px;color:#455532;font-weight:750}.timer-readout{font-size:25px;font-weight:850;margin-top:7px;font-variant-numeric:tabular-nums}.timer-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.timer-buttons button{background:#263516;color:#f6ffe9}.help{margin:18px 2px 0;color:var(--muted);font-size:12px;line-height:1.6}.status{min-height:18px;margin-top:12px;font-size:12px;color:var(--muted)}footer{margin-top:24px;text-align:center;color:#737987;font-size:12px}
+@media(max-width:720px){.shell{padding:22px 16px 30px}.layout{grid-template-columns:1fr}.output{min-height:310px}.big-time{font-size:clamp(48px,13vw,68px)}.subtitle{margin-bottom:18px}}
+@media(max-width:380px){.fields,.actions{grid-template-columns:1fr}.wide{grid-column:auto}.stats{gap:8px}.stat{padding:12px}}
+</style></head><body><main class="shell">
+<header><div class="logo">↗</div><div><div class="kicker">Kalkulator czasu</div><h1>Twoja przerwa</h1></div></header>
+<p class="subtitle">Ustaw koniec pracy i limit przerwy. Kalkulator podpowie, o której zacząć, żeby wykorzystać pozostały czas i skończyć punktualnie.</p>
+<div class="layout">
+<section class="panel"><h2>Ustawienia</h2><div class="fields">
+<div class="field"><label for="end">Koniec pracy</label><input id="end" type="time" value="16:00"></div>
+<div class="field"><label for="limit">Przerwa (min)</label><input id="limit" type="number" min="1" max="300" value="45" inputmode="numeric"></div>
+<div class="field wide"><label for="used">Wykorzystana przerwa (MM:SS)</label><input id="used" type="text" value="00:00" inputmode="numeric" placeholder="np. 12:35"></div>
+</div>
+<div class="actions"><button class="primary" id="startTimer">▶ Uruchom stoper</button><button class="secondary" id="resetUsed">Wyzeruj czas</button></div>
+<button class="secondary full" id="setNow">Ustaw koniec pracy na aktualną godzinę</button>
+<div class="status" id="status" aria-live="polite">Ustawienia zapisują się w tej przeglądarce.</div>
+<p class="help">Wpisz czas jako minuty:sekundy, np. <b>12:35</b>. Godzina rozpoczęcia = koniec pracy minus pozostały czas przerwy.</p></section>
+<section class="panel output"><div><div class="eyebrow">Wejdź na przerwę o</div><div class="big-time" id="startAt">15:15:00</div><div class="note" id="explanation">Żeby wykorzystać całe 45 minut przerwy.</div></div>
+<div><div class="stats"><div class="stat"><strong id="remaining">45:00</strong><span>Pozostało przerwy</span></div><div class="stat"><strong id="finishAt">16:00</strong><span>Koniec pracy</span></div></div>
+<div class="timer"><div class="timer-head"><span>Stoper przerwy</span><span id="timerState">Zatrzymany</span></div><div class="timer-readout" id="timerReadout">00:00</div><div class="timer-buttons"><button id="pauseTimer">Ⅱ Zatrzymaj</button><button id="resumeTimer">▶ Wznów</button></div></div></div></section></div>
+<footer>Działa na telefonie i komputerze · bez konta · obliczenia offline</footer></main>
+<script>
+(()=>{const $=id=>document.getElementById(id);let running=false,started=0,base=0,interval=null;
+function parse(s){s=s.trim();if(!s)return 0;if(/^\d+$/.test(s))return Number(s)*60;let p=s.split(':');if(p.length!==2||!p.every(x=>/^\d+$/.test(x)))return NaN;let m=+p[0],sec=+p[1];return sec>59?NaN:m*60+sec}
+function fmt(n){n=Math.max(0,Math.floor(n));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
+function save(){try{localStorage.setItem('twojaPrzerwa',JSON.stringify({end:$('end').value,limit:$('limit').value,used:$('used').value}))}catch(e){}}
+function calc(msg=false){let limit=+$('limit').value,used=parse($('used').value),end=$('end').value;$('finishAt').textContent=end||'—';if(!Number.isFinite(limit)||limit<1||limit>300||!end||!Number.isFinite(used)||used<0){$('startAt').textContent='—';$('remaining').textContent='—';$('explanation').textContent='Sprawdź wprowadzone wartości.';if(msg)$('status').textContent='Sprawdź limit, godzinę końca i czas MM:SS.';save();return}
+let rem=Math.round(limit*60)-used;$('remaining').textContent=fmt(Math.max(0,rem));if(rem<0){$('startAt').textContent='—';$('explanation').textContent='Wykorzystany czas przekracza limit.';if(msg)$('status').textContent='Wykorzystany czas jest większy niż limit.';save();return}
+let [h,m]=end.split(':').map(Number),s=h*3600+m*60-rem,prev=s<0;s=(s%86400+86400)%86400;$('startAt').textContent=[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,'0')).join(':');$('explanation').textContent=`Żeby wykorzystać całe ${limit} minut przerwy.${prev?' Godzina wypada poprzedniego dnia.':''}`;if(msg)$('status').textContent='Wynik zaktualizowany.';save()}
+function tick(){let n=base+(running?Math.floor((Date.now()-started)/1000):0);$('timerReadout').textContent=fmt(n);if(running)$('used').value=fmt(n);calc()}
+function pause(){if(!running)return;base+=Math.floor((Date.now()-started)/1000);running=false;clearInterval(interval);interval=null;$('used').value=fmt(base);$('startTimer').textContent='▶ Uruchom stoper';$('timerState').textContent='Zatrzymany';tick();save()}
+function start(){if(running){pause();return}let n=parse($('used').value);if(!Number.isFinite(n)||n<0){$('status').textContent='Wpisz czas w formacie MM:SS.';return}base=n;started=Date.now();running=true;$('startTimer').textContent='Ⅱ Zatrzymaj stoper';$('timerState').textContent='Działa';interval=setInterval(tick,250);tick()}
+try{let s=JSON.parse(localStorage.getItem('twojaPrzerwa')||'null');if(s){if(s.end)$('end').value=s.end;if(s.limit)$('limit').value=s.limit;if(s.used!==undefined)$('used').value=s.used}}catch(e){}
+['end','limit','used'].forEach(id=>$(id).addEventListener('input',()=>calc()));
+$('startTimer').addEventListener('click',start);$('pauseTimer').addEventListener('click',pause);$('resumeTimer').addEventListener('click',start);
+$('resetUsed').addEventListener('click',()=>{pause();base=0;$('used').value='00:00';$('timerReadout').textContent='00:00';calc(true)});
+$('setNow').addEventListener('click',()=>{let d=new Date();$('end').value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');calc(true)});calc();
+})();
+</script></body></html>
